@@ -424,6 +424,33 @@ func renderTaskResponse(task *clientpb.BeaconTask, con *console.SliverConsoleCli
 		}
 		filesystem.PrintUpload(upload, con)
 
+	case sliverpb.MsgChmodReq:
+		chmod := &sliverpb.Chmod{}
+		err := proto.Unmarshal(task.Response, chmod)
+		if err != nil {
+			con.PrintErrorf("Failed to decode task response: %s\n", err)
+			return
+		}
+		filesystem.PrintChmod(chmod, con)
+
+	case sliverpb.MsgChownReq:
+		chown := &sliverpb.Chown{}
+		err := proto.Unmarshal(task.Response, chown)
+		if err != nil {
+			con.PrintErrorf("Failed to decode task response: %s\n", err)
+			return
+		}
+		filesystem.PrintChown(chown, con)
+
+	case sliverpb.MsgChtimesReq:
+		chtimes := &sliverpb.Chtimes{}
+		err := proto.Unmarshal(task.Response, chtimes)
+		if err != nil {
+			con.PrintErrorf("Failed to decode task response: %s\n", err)
+			return
+		}
+		filesystem.PrintChtimes(chtimes, con)
+
 	// ---------------------
 	// Network commands
 	// ---------------------
@@ -566,6 +593,7 @@ func renderTaskResponse(task *clientpb.BeaconTask, con *console.SliverConsoleCli
 				"overflow":      &grumble.FlagMapItem{Value: false},
 				"skip-pages":    &grumble.FlagMapItem{Value: 0},
 				"print-cmdline": &grumble.FlagMapItem{Value: true},
+				"tree":          &grumble.FlagMapItem{Value: false},
 			},
 		}
 		processes.PrintPS(beacon.OS, ps, true, ctx, con)

@@ -272,6 +272,7 @@ func parseCompileFlags(ctx *grumble.Context, con *console.SliverConsoleClient) *
 	limitDatetime := ctx.Flags.String("limit-datetime")
 	limitFileExists := ctx.Flags.String("limit-fileexists")
 	limitLocale := ctx.Flags.String("limit-locale")
+	debugFile := ctx.Flags.String("debug-file")
 
 	isSharedLib := false
 	isService := false
@@ -369,6 +370,8 @@ func parseCompileFlags(ctx *grumble.Context, con *console.SliverConsoleClient) *
 		IsShellcode: isShellcode,
 
 		RunAtLoad: runAtLoad,
+
+		DebugFile: debugFile,
 	}
 
 	return config
@@ -488,10 +491,9 @@ func ParseHTTPc2(args string) ([]*clientpb.ImplantC2, error) {
 		return c2s, nil
 	}
 	for index, arg := range strings.Split(args, ",") {
-		arg = strings.ToLower(arg)
 		var uri *url.URL
 		var err error
-		if strings.HasPrefix(arg, "http://") || strings.HasPrefix(arg, "https://") {
+		if cmp := strings.ToLower(arg); strings.HasPrefix(cmp, "http://") || strings.HasPrefix(cmp, "https://") {
 			uri, err = url.Parse(arg)
 			if err != nil {
 				return nil, err

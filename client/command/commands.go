@@ -1324,6 +1324,7 @@ func BindCommands(con *console.SliverConsoleClient) {
 			f.String("a", "arch", "amd64", "cpu architecture")
 			f.String("N", "name", "", "agent name")
 			f.Bool("d", "debug", false, "enable debug features")
+			f.String("O", "debug-file", "", "path to debug output")
 			f.Bool("e", "evasion", false, "enable evasion features (e.g. overwrite user space hooks)")
 			f.Bool("l", "skip-symbols", false, "skip symbol obfuscation")
 			f.String("I", "template", "sliver", "implant code template")
@@ -1385,6 +1386,7 @@ func BindCommands(con *console.SliverConsoleClient) {
 			f.String("a", "arch", "amd64", "cpu architecture")
 			f.String("N", "name", "", "agent name")
 			f.Bool("d", "debug", false, "enable debug features")
+			f.String("O", "debug-file", "", "path to debug output")
 			f.Bool("e", "evasion", false, "enable evasion features  (e.g. overwrite user space hooks)")
 			f.Bool("l", "skip-symbols", false, "skip symbol obfuscation")
 			f.String("I", "template", "sliver", "implant code template")
@@ -1541,6 +1543,7 @@ func BindCommands(con *console.SliverConsoleClient) {
 			f.String("a", "arch", "amd64", "cpu architecture")
 
 			f.Bool("d", "debug", false, "enable debug features")
+			f.String("O", "debug-file", "", "path to debug output")
 			f.Bool("e", "evasion", false, "enable evasion features")
 			f.Bool("l", "skip-symbols", false, "skip symbol obfuscation")
 			f.Bool("G", "disable-sgn", false, "disable shikata ga nai shellcode encoder")
@@ -1609,6 +1612,7 @@ func BindCommands(con *console.SliverConsoleClient) {
 			f.String("a", "arch", "amd64", "cpu architecture")
 
 			f.Bool("d", "debug", false, "enable debug features")
+			f.String("O", "debug-file", "", "path to debug output")
 			f.Bool("e", "evasion", false, "enable evasion features")
 			f.Bool("l", "skip-symbols", false, "skip symbol obfuscation")
 
@@ -2141,6 +2145,70 @@ func BindCommands(con *console.SliverConsoleClient) {
 			con.Println()
 			return nil
 		},
+	})
+
+	con.App.AddCommand(&grumble.Command{
+		Name:     consts.ChmodStr,
+		Help:     "Change permissions on a file or directory",
+		LongHelp: help.GetHelpFor([]string{consts.ChmodStr}),
+		Flags: func(f *grumble.Flags) {
+			f.Bool("r", "recursive", false, "recursively change permissions on files")
+			f.Int("t", "timeout", defaultTimeout, "command timeout in seconds")
+		},
+		Args: func(a *grumble.Args) {
+			a.String("path", "path to the file to remove")
+			a.String("mode", "file permissions in octal, e.g. 0644")
+		},
+		Run: func(ctx *grumble.Context) error {
+			con.Println()
+			filesystem.ChmodCmd(ctx, con)
+			con.Println()
+			return nil
+		},
+		HelpGroup: consts.SliverHelpGroup,
+	})
+
+	con.App.AddCommand(&grumble.Command{
+		Name:     consts.ChownStr,
+		Help:     "Change owner on a file or directory",
+		LongHelp: help.GetHelpFor([]string{consts.ChownStr}),
+		Flags: func(f *grumble.Flags) {
+			f.Bool("r", "recursive", false, "recursively change permissions on files")
+			f.Int("t", "timeout", defaultTimeout, "command timeout in seconds")
+		},
+		Args: func(a *grumble.Args) {
+			a.String("path", "path to the file to remove")
+			a.String("uid", "User, e.g. root")
+			a.String("gid", "Group, e.g. root")
+		},
+		Run: func(ctx *grumble.Context) error {
+			con.Println()
+			filesystem.ChownCmd(ctx, con)
+			con.Println()
+			return nil
+		},
+		HelpGroup: consts.SliverHelpGroup,
+	})
+
+	con.App.AddCommand(&grumble.Command{
+		Name:     consts.ChtimesStr,
+		Help:     "Change access and modification times on a file (timestomp)",
+		LongHelp: help.GetHelpFor([]string{consts.ChtimesStr}),
+		Flags: func(f *grumble.Flags) {
+			f.Int("t", "timeout", defaultTimeout, "command timeout in seconds")
+		},
+		Args: func(a *grumble.Args) {
+			a.String("path", "path to the file to remove")
+			a.String("atime", "Last accessed time in DateTime format, i.e. 2006-01-02 15:04:05")
+			a.String("mtime", "Last modified time in DateTime format, i.e. 2006-01-02 15:04:05")
+		},
+		Run: func(ctx *grumble.Context) error {
+			con.Println()
+			filesystem.ChtimesCmd(ctx, con)
+			con.Println()
+			return nil
+		},
+		HelpGroup: consts.SliverHelpGroup,
 	})
 
 	// [ Websites ] ---------------------------------------------

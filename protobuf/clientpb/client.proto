@@ -137,10 +137,11 @@ message ImplantConfig {
   string MtlsCert = 21;
   string MtlsKey = 22;
 
-  string ECCPublicKey = 23;
-  string ECCPrivateKey = 24;
-  string ECCPublicKeySignature = 25;
-  string MinisignServerPublicKey = 26;
+  string ECCServerPublicKey = 23;
+  string ECCPublicKey = 24;
+  string ECCPrivateKey = 25;
+  string ECCPublicKeySignature = 26;
+  string MinisignServerPublicKey = 27;
 
   string WGImplantPrivKey = 30;
   string WGServerPubKey = 31;
@@ -171,6 +172,7 @@ message ImplantConfig {
   bool IsShellcode = 104;
 
   bool RunAtLoad = 105;
+  string DebugFile = 106;
 }
 
 message ExternalImplantConfig {
